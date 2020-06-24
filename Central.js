@@ -207,29 +207,26 @@ var connectCallback = (err) => {
               var data = JSON.stringify({
                 state: state
               });
+              
+            }else if(state == on){
+                const gpsData = parse(data.split(','));
+                
+                var data = JSON.stringify({
 
-              var message = new Message(data);
-              hubClient.sendEvent(message, (err, res) => console.log(`Sent message: ${message.getData()}` +
-              (err ? `; error: ${err.toString()}` : '') +
-              (res ? `; status: ${res.constructor.name}` : '')));
-
-            } else if(state == on){
-              const gpsData = parse(data.split(','));
-      
-              var data = JSON.stringify({
-                state: state,
-                Location: {
-                    lat: gpsData.latitude,
-                    lon: gpsData.longitude
-                  }
-               });
-               var message = new Message(data);
-               hubClient.sendEvent(message, (err, res) => console.log(`Sent message: ${message.getData()}` +
-               (err ? `; error: ${err.toString()}` : '') +
-               (res ? `; status: ${res.constructor.name}` : '')));
+                    state: state,
+                    Location: {
+                        lat: gpsData.latitude,
+                        lon: gpsData.longitude
+                    }
+                });
             }
-          }
-        });
+
+             var message = new Message(data);
+             hubClient.sendEvent(message, (err, res) => console.log(`Sent message: ${message.getData()}` +
+             (err ? `; error: ${err.toString()}` : '') +
+             (res ? `; status: ${res.constructor.name}` : '')));
+        }
+    });
 
         // Get device twin from Azure IoT Central.
         hubClient.getTwin((err, twin) => {
